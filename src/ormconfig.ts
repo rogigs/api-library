@@ -1,6 +1,4 @@
 import { DataSourceOptions } from 'typeorm';
-import { Category } from './category/entities/category.entity';
-import { User } from './users/entities/user.entity';
 
 export const config: DataSourceOptions = {
   type: 'mysql',
@@ -11,7 +9,7 @@ export const config: DataSourceOptions = {
   database: 'library',
   synchronize: true,
   logging: true,
-  entities: [User, Category],
+  entities: [__dirname + '/**/entities/*.entity{.ts,.js}'],
   subscribers: [],
   migrations: [],
 };
