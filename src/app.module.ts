@@ -6,6 +6,7 @@ import { CategoriesModule } from './categories/categories.module';
 import { ImagesModule } from './images/images.module';
 import { config } from './ormconfig';
 import { UsersModule } from './users/users.module';
+import { BooksModule } from './books/books.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { UsersModule } from './users/users.module';
     TypeOrmModule.forRoot(config),
     ImagesModule,
     CategoriesModule,
+    BooksModule,
   ],
   controllers: [AppController],
   providers: [AppService],

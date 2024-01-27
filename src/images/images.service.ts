@@ -8,10 +8,10 @@ import { Image } from './entities/image.entity';
 export class ImagesService {
   constructor(
     @InjectRepository(Image)
-    private imageRepository: Repository<Image>,
+    private imagesRepository: Repository<Image>,
   ) {}
 
   create(createImageDto: CreateImageDto) {
-    return this.imageRepository.save(createImageDto);
+    return this.imagesRepository.save(createImageDto);
   }
 }
