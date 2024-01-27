@@ -1,4 +1,5 @@
 import { DataSourceOptions } from 'typeorm';
+import { Category } from './category/entities/category.entity';
 import { User } from './users/entities/user.entity';
 
 export const config: DataSourceOptions = {
@@ -10,7 +11,7 @@ export const config: DataSourceOptions = {
   database: 'library',
   synchronize: true,
   logging: true,
-  entities: [User],
+  entities: [User, Category],
   subscribers: [],
   migrations: [],
 };
