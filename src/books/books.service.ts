@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
 import { CreateBookDto } from './dto/create-book.dto';
+import { UpdateBookDto } from './dto/update-book.dto';
 import { Book } from './entities/book.entity';
-Book;
 @Injectable()
 export class BooksService {
   constructor(
@@ -13,6 +14,10 @@ export class BooksService {
 
   create(createBookDto: CreateBookDto) {
     return this.booksRepository.save(createBookDto);
+  }
+
+  find(id: string) {
+    return this.booksRepository.findOne({ where: { id } });
   }
 
   async findAllPaginated(page: number, pageSize: number) {
@@ -33,5 +38,22 @@ export class BooksService {
       currentPage: page,
       totalPages,
     };
+  }
+
+  update(id: string, user: User, updateBookDto: UpdateBookDto) {
+    return this.booksRepository.update(id, {
+      ...updateBookDto,
+      updatedByUser: user, // TODO: user sessions
+      updateAt: new Date(),
+    });
+  }
+
+  async deleteLogical(id: string, user: User, updateBookDto: UpdateBookDto) {
+    return this.booksRepository.update(id, {
+      ...updateBookDto,
+      active: 0,
+      deleteAt: new Date(),
+      deletedByUser: user,
+    });
   }
 }

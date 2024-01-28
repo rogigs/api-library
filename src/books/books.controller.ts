@@ -2,19 +2,23 @@ import {
   Body,
   Controller,
   Get,
+  Param,
   ParseIntPipe,
+  Patch,
   Post,
   Query,
 } from '@nestjs/common';
 import { ImagesService } from 'src/images/images.service';
+import { UsersService } from 'src/users/users.service';
 import { BooksService } from './books.service';
 import { CreateBookDto } from './dto/create-book.dto';
-
+import { UpdateBookDto } from './dto/update-book.dto';
 @Controller('books')
 export class BooksController {
   constructor(
     private readonly booksService: BooksService,
     private readonly imagesService: ImagesService,
+    private readonly usersService: UsersService,
   ) {}
 
   @Post()
@@ -28,10 +32,40 @@ export class BooksController {
   }
 
   @Get()
-  async findAll(
+  findAll(
     @Query('page', ParseIntPipe) page: number = 1,
     @Query('pageSize', ParseIntPipe) pageSize: number = 10,
   ) {
     return this.booksService.findAllPaginated(page, pageSize);
+  }
+
+  @Patch(':id/user/:user')
+  async update(
+    @Param('id') id: string,
+    @Param('userId') userId: string,
+    @Body() updateBookDto: UpdateBookDto,
+  ) {
+    const user = await this.usersService.find(userId);
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    return this.booksService.update(id, user, updateBookDto);
+  }
+
+  @Patch(':id/user/:user')
+  async deleteLogical(
+    @Param('id') id: string,
+    @Param('userId') userId: string,
+    @Body() updateBookDto: UpdateBookDto,
+  ) {
+    const user = await this.usersService.find(userId);
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    return this.booksService.deleteLogical(id, user, updateBookDto);
   }
 }

@@ -13,4 +13,8 @@ export class UsersService {
   create(createUserDto: CreateUserDto) {
     return this.userRepository.save(createUserDto);
   }
+
+  find(id: string) {
+    return this.userRepository.findOne({ where: { id } });
+  }
 }

@@ -20,6 +20,9 @@ export abstract class Auditable extends BaseModel {
   @Column({ type: 'timestamp', nullable: true })
   updateAt: Date;
 
+  @Column({ type: 'timestamp', nullable: true })
+  deleteAt: Date;
+
   @ManyToOne(() => User, { nullable: true })
   @JoinColumn({ name: 'updatedByUserId' })
   updatedByUser: User;
