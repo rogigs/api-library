@@ -1,5 +1,5 @@
 import { Auditable } from 'src/models/auditable';
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
 import { Category } from '../../categories/entities/category.entity';
 import { Image } from '../../images/entities/image.entity';
 
@@ -8,9 +8,9 @@ export class Book extends Auditable {
   @Column()
   name: string;
 
-  @ManyToOne(() => Image)
+  @OneToOne(() => Image)
   @JoinColumn({ name: 'imageId' })
-  img: Image;
+  image: Image;
 
   @Column()
   publisher: string;

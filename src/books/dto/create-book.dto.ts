@@ -1,6 +1,8 @@
+import { Image } from 'src/images/entities/image.entity';
+
 export class CreateBookDto {
   name: string;
-  imgId: string;
+  image: Image;
   publisher: string;
   author: string;
   year: Date;

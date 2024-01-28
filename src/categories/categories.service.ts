@@ -14,4 +14,8 @@ export class CategoriesService {
   create(createCategoryDto: CreateCategoryDto) {
     return this.categoryRepository.save(createCategoryDto);
   }
+
+  findOne(id: string) {
+    return this.categoryRepository.findOne({ where: { id } });
+  }
 }
