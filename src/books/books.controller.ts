@@ -32,6 +32,6 @@ export class BooksController {
     @Query('page', ParseIntPipe) page: number = 1,
     @Query('pageSize', ParseIntPipe) pageSize: number = 10,
   ) {
-    return this.imagesService.findAllPaginated(page, pageSize);
+    return this.booksService.findAllPaginated(page, pageSize);
   }
 }
