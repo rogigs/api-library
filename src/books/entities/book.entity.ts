@@ -18,8 +18,8 @@ export class Book extends Auditable {
   @Column()
   author: string;
 
-  @Column({ type: 'date' })
-  year: Date;
+  @Column({ length: 4 })
+  year: string;
 
   @Column()
   language: string;

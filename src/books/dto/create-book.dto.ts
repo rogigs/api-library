@@ -5,7 +5,7 @@ export class CreateBookDto {
   image: Image;
   publisher: string;
   author: string;
-  year: Date;
+  year: string;
   language: string; // TODO: could be a entity
   description: string;
   categoryId: string;
