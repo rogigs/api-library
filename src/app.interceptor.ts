@@ -1,24 +1,31 @@
 import {
   CallHandler,
   ExecutionContext,
+  HttpStatus,
   Injectable,
   NestInterceptor,
 } from '@nestjs/common';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
 @Injectable()
 export class ResponseInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     return next.handle().pipe(
-      map((data) => {
+      map((data) => ({
+        status: HttpStatus.OK,
+        data,
+      })),
+      catchError((error) => {
         const response = context.switchToHttp().getResponse();
-        const status = response.statusCode;
+        const status = HttpStatus.INTERNAL_SERVER_ERROR; // TODO: resolve status code 200
 
-        return {
+        response.status(status).json({
           status,
-          data,
-        };
+          error: error.message || 'Internal server error',
+        });
+
+        return throwError(() => error);
       }),
     );
   }
