@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DeepPartial, Repository } from 'typeorm';
 import { User } from '../users/entities/user.entity';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
@@ -12,8 +12,11 @@ export class BooksService {
     private booksRepository: Repository<Book>,
   ) {}
 
-  create(createBookDto: CreateBookDto) {
-    return this.booksRepository.save(createBookDto);
+  create(createBookDto: CreateBookDto, user: string) {
+    return this.booksRepository.save({
+      ...createBookDto,
+      createdByUser: user as DeepPartial<User>,
+    });
   }
 
   find(id: string) {
@@ -43,7 +46,7 @@ export class BooksService {
   update(id: string, user: User, updateBookDto: UpdateBookDto) {
     return this.booksRepository.update(id, {
       ...updateBookDto,
-      updatedByUser: user, // TODO: user sessions
+      updatedByUser: user,
       updateAt: new Date(),
     });
   }

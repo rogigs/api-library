@@ -7,13 +7,19 @@ import {
   Patch,
   Post,
   Query,
+  Request,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '../auth.guard';
+import { Image } from '../images/entities/image.entity';
 import { ImagesService } from '../images/images.service';
 import { UsersService } from '../users/users.service';
 import { BooksService } from './books.service';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
+
 @Controller('books')
+@UseGuards(AuthGuard)
 export class BooksController {
   constructor(
     private readonly booksService: BooksService,
@@ -22,13 +28,16 @@ export class BooksController {
   ) {}
 
   @Post()
-  async create(@Body() createBookDto: CreateBookDto) {
+  async create(@Body() createBookDto: CreateBookDto, @Request() req) {
     const image = await this.imagesService.create(createBookDto.image);
 
-    return this.booksService.create({
-      ...createBookDto,
-      image: image.id as any,
-    });
+    return this.booksService.create(
+      {
+        ...createBookDto,
+        image: image as Image,
+      },
+      req.user.id,
+    );
   }
 
   @Get(':id')
@@ -44,13 +53,13 @@ export class BooksController {
     return this.booksService.findAllPaginated(page, pageSize);
   }
 
-  @Patch(':id/user/:user')
+  @Patch(':id')
   async update(
     @Param('id') id: string,
-    @Param('userId') userId: string,
     @Body() updateBookDto: UpdateBookDto,
+    @Request() req,
   ) {
-    const user = await this.usersService.find(userId);
+    const user = await this.usersService.find(req.user.email);
 
     if (!user) {
       throw new Error('User not found');
@@ -59,13 +68,13 @@ export class BooksController {
     return this.booksService.update(id, user, updateBookDto);
   }
 
-  @Patch(':id/user/:user')
+  @Patch(':id/delete')
   async deleteLogical(
     @Param('id') id: string,
-    @Param('userId') userId: string,
     @Body() updateBookDto: UpdateBookDto,
+    @Request() req,
   ) {
-    const user = await this.usersService.find(userId);
+    const user = await this.usersService.find(req.user.email);
 
     if (!user) {
       throw new Error('User not found');
