@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
+import { ResponseInterceptor } from './app.interceptor';
 import { AppService } from './app.service';
 import { CategoriesModule } from './modules/auth//categories/categories.module';
 import { ImagesModule } from './modules/auth//images/images.module';
@@ -19,6 +21,12 @@ import { config } from './ormconfig';
     AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ResponseInterceptor,
+    },
+  ],
 })
 export class AppModule {}
