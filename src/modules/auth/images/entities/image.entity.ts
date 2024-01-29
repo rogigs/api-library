@@ -3,9 +3,9 @@ import { Column, Entity } from 'typeorm';
 
 @Entity()
 export class Image extends BaseModel {
-  @Column()
+  @Column({ length: 500 })
   src: string;
 
-  @Column()
+  @Column({ length: 250 })
   alt: string;
 }
