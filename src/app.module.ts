@@ -2,11 +2,11 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { BooksModule } from './books/books.module';
-import { CategoriesModule } from './categories/categories.module';
-import { ImagesModule } from './images/images.module';
+import { CategoriesModule } from './modules/auth//categories/categories.module';
+import { ImagesModule } from './modules/auth//images/images.module';
+import { UsersModule } from './modules/auth//users/users.module';
+import { BooksModule } from './modules/auth/books/books.module';
 import { config } from './ormconfig';
-import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [

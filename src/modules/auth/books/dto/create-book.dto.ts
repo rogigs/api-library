@@ -1,4 +1,4 @@
-import { Image } from 'src/images/entities/image.entity';
+import { Image } from '../../images/entities/image.entity';
 
 export class CreateBookDto {
   name: string;

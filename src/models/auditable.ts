@@ -1,5 +1,5 @@
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
-import { User } from '../users/entities/user.entity';
+import { User } from '../modules/auth/users/entities/user.entity';
 import { BaseModel } from './baseModel';
 
 type ActiveStatus = 0 | 1;

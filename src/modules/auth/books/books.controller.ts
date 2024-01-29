@@ -8,8 +8,8 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { ImagesService } from 'src/images/images.service';
-import { UsersService } from 'src/users/users.service';
+import { ImagesService } from '../images/images.service';
+import { UsersService } from '../users/users.service';
 import { BooksService } from './books.service';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
@@ -29,6 +29,11 @@ export class BooksController {
       ...createBookDto,
       image: image.id as any,
     });
+  }
+
+  @Get(':id')
+  find(@Param('id') id: string) {
+    return this.booksService.find(id);
   }
 
   @Get()
