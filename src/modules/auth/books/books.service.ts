@@ -19,16 +19,25 @@ export class BooksService {
     });
   }
 
-  find(id: string) {
-    return this.booksRepository.findOne({ where: { id } });
+  findOne(id: string) {
+    return this.booksRepository
+      .createQueryBuilder('book')
+      .where('book.id = :id', { id })
+      .leftJoinAndSelect('book.image', 'image')
+      .orWhere('book.deletedByUserId IS NULL')
+      .orWhere('book.updateAt IS NULL')
+      .orWhere('book.deleteAt IS NULL')
+      .orWhere('book.updatedByUserId IS NULL')
+      .getOne();
   }
 
   async findAllPaginated(page: number, pageSize: number) {
     const skip = (page - 1) * pageSize;
 
-    const [data, total] = await this.booksRepository
+    const [items, total] = await this.booksRepository
       .createQueryBuilder('book')
       .leftJoinAndSelect('book.image', 'image')
+      .where('book.active = :active', { active: 1 })
       .take(pageSize)
       .skip(skip)
       .getManyAndCount();
@@ -36,7 +45,7 @@ export class BooksService {
     const totalPages = Math.ceil(total / pageSize);
 
     return {
-      data,
+      items,
       total,
       currentPage: page,
       totalPages,

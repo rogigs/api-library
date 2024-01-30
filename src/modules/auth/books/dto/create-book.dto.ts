@@ -8,5 +8,5 @@ export class CreateBookDto {
   year: string;
   language: string; // TODO: could be a entity
   description: string;
-  categoryId: string;
+  category: string;
 }

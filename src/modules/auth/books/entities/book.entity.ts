@@ -35,7 +35,7 @@ export class Book extends Auditable {
   @Column({ length: 500 })
   description: string;
 
-  @ManyToOne(() => Category)
+  @ManyToOne(() => Category, (category) => category.id)
   @JoinColumn({ name: 'categoryId' })
-  category: Category;
+  category: string;
 }

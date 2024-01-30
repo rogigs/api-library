@@ -11,6 +11,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '../auth.guard';
+import { CategoriesService } from '../categories/categories.service';
 import { Image } from '../images/entities/image.entity';
 import { ImagesService } from '../images/images.service';
 import { UsersService } from '../users/users.service';
@@ -25,6 +26,7 @@ export class BooksController {
     private readonly booksService: BooksService,
     private readonly imagesService: ImagesService,
     private readonly usersService: UsersService,
+    private readonly categoriesService: CategoriesService,
   ) {}
 
   @Post()
@@ -41,8 +43,18 @@ export class BooksController {
   }
 
   @Get(':id')
-  find(@Param('id') id: string) {
-    return this.booksService.find(id);
+  async find(@Param('id') id: string) {
+    const book = await this.booksService.findOne(id);
+    const category = await this.categoriesService.findOne(book.category);
+
+    if (!book) {
+      throw new Error('Book not found');
+    }
+    if (!category) {
+      throw new Error('Category not found');
+    }
+
+    return { ...book, category: category };
   }
 
   @Get()
@@ -65,7 +77,12 @@ export class BooksController {
       throw new Error('User not found');
     }
 
-    return this.booksService.update(id, user, updateBookDto);
+    await this.imagesService.update(
+      updateBookDto.image.id,
+      updateBookDto.image,
+    );
+
+    return this.booksService.update(id, user, { ...updateBookDto });
   }
 
   @Patch(':id/delete')

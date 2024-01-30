@@ -8,8 +8,4 @@ export abstract class BaseModel {
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
-
-  toJSON() {
-    return { id: this.id };
-  }
 }
