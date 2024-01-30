@@ -19,6 +19,13 @@ export class BooksService {
     });
   }
 
+  search(query: string) {
+    return this.booksRepository
+      .createQueryBuilder('book')
+      .where('book.name LIKE :query', { query: `%${query}%` })
+      .getMany();
+  }
+
   findOne(id: string) {
     return this.booksRepository
       .createQueryBuilder('book')

@@ -58,6 +58,11 @@ export class BooksController {
   }
 
   @Get()
+  async search(@Query('name') name: string) {
+    return await this.booksService.search(name);
+  }
+
+  @Get()
   findAll(
     @Query('page', ParseIntPipe) page: number = 1,
     @Query('pageSize', ParseIntPipe) pageSize: number = 10,
