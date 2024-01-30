@@ -23,6 +23,7 @@ export class BooksService {
     return this.booksRepository
       .createQueryBuilder('book')
       .where('book.name LIKE :query', { query: `%${query}%` })
+      .leftJoinAndSelect('book.image', 'image')
       .getMany();
   }
 
@@ -39,24 +40,28 @@ export class BooksService {
   }
 
   async findAllPaginated(page: number, pageSize: number) {
-    const skip = (page - 1) * pageSize;
+    try {
+      const skip = (page - 1) * pageSize;
 
-    const [items, total] = await this.booksRepository
-      .createQueryBuilder('book')
-      .leftJoinAndSelect('book.image', 'image')
-      .where('book.active = :active', { active: 1 })
-      .take(pageSize)
-      .skip(skip)
-      .getManyAndCount();
+      const [items, total] = await this.booksRepository
+        .createQueryBuilder('book')
+        .where('book.active = :active', { active: 1 })
+        .leftJoinAndSelect('book.image', 'image')
+        .take(pageSize)
+        .skip(skip)
+        .getManyAndCount();
 
-    const totalPages = Math.ceil(total / pageSize);
+      const totalPages = Math.ceil(total / pageSize);
 
-    return {
-      items,
-      total,
-      currentPage: page,
-      totalPages,
-    };
+      return {
+        items,
+        total,
+        currentPage: page,
+        totalPages,
+      };
+    } catch (error) {
+      console.log('🚀 ~ BooksService ~ findAllPaginated ~ error:', error);
+    }
   }
 
   update(id: string, user: User, updateBookDto: UpdateBookDto) {

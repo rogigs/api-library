@@ -42,7 +42,7 @@ export class BooksController {
     );
   }
 
-  @Get(':id')
+  @Get('/find/:id')
   async find(@Param('id') id: string) {
     const book = await this.booksService.findOne(id);
     const category = await this.categoriesService.findOne(book.category);
@@ -57,16 +57,17 @@ export class BooksController {
     return { ...book, category: category };
   }
 
-  @Get()
-  async search(@Query('name') name: string) {
-    return await this.booksService.search(name);
+  @Get('/search')
+  serch(@Query('name') name: string) {
+    return this.booksService.search(name);
   }
 
-  @Get()
+  @Get('/pagination')
   findAll(
     @Query('page', ParseIntPipe) page: number = 1,
     @Query('pageSize', ParseIntPipe) pageSize: number = 10,
   ) {
+    console.log('UEeeeeeeeeeeeeeeeeeee');
     return this.booksService.findAllPaginated(page, pageSize);
   }
 
