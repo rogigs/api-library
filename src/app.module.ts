@@ -1,14 +1,24 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { ResponseInterceptor } from './app.interceptor';
 import { AppService } from './app.service';
 import { AuthModule } from './modules/auth/auth.module';
-import { config } from './ormconfig';
+import { setJwtConstants } from './modules/auth/constants';
+import { typeOrmConfig } from './ormconfig';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(config), AuthModule],
+  imports: [
+    TypeOrmModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) =>
+        typeOrmConfig(configService),
+    }),
+    ConfigModule.forRoot({ isGlobal: true }),
+    AuthModule,
+  ],
   controllers: [AppController],
   providers: [
     AppService,
@@ -18,4 +28,8 @@ import { config } from './ormconfig';
     },
   ],
 })
-export class AppModule {}
+export class AppModule {
+  constructor(private configService: ConfigService) {
+    setJwtConstants(this.configService);
+  }
+}
