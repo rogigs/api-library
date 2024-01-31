@@ -32,6 +32,20 @@
 $ npm install
 ```
 
+## Environment Variables
+
+To run this project, you will need to add the following environment variables to your .env file
+
+```bash
+DB_HOST="your-host"
+DB_PORT="your-port"
+DB_USERNAME="your-username"
+DB_PASSWORD="your-password"
+DB_DATABASE="your-database"
+
+SECRET_TOKEN="your-secret-token"
+```
+
 ## Running the app
 
 ```bash
