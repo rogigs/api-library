@@ -14,7 +14,11 @@ export class UsersService {
     return this.userRepository.save(createUserDto);
   }
 
-  find(email: string) {
-    return this.userRepository.findOne({ where: { email } });
+  async find(email: string) {
+    const user = await this.userRepository.findOne({ where: { email } });
+
+    if (!user) throw new Error('User not found');
+
+    return user;
   }
 }

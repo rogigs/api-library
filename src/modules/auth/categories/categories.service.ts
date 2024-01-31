@@ -15,7 +15,11 @@ export class CategoriesService {
     return this.categoryRepository.save(createCategoryDto);
   }
 
-  findOne(id: string) {
-    return this.categoryRepository.findOne({ where: { id } });
+  async findOne(id: string) {
+    const category = await this.categoryRepository.findOne({ where: { id } });
+
+    if (!category) throw new Error('Category not found');
+
+    return category;
   }
 }

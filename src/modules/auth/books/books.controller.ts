@@ -47,13 +47,6 @@ export class BooksController {
     const book = await this.booksService.findOne(id);
     const category = await this.categoriesService.findOne(book.category);
 
-    if (!book) {
-      throw new Error('Book not found');
-    }
-    if (!category) {
-      throw new Error('Category not found');
-    }
-
     return { ...book, category: category };
   }
 
@@ -79,10 +72,6 @@ export class BooksController {
   ) {
     const user = await this.usersService.find(req.user.email);
 
-    if (!user) {
-      throw new Error('User not found');
-    }
-
     await this.imagesService.update(
       updateBookDto.image.id,
       updateBookDto.image,
@@ -98,10 +87,6 @@ export class BooksController {
     @Request() req,
   ) {
     const user = await this.usersService.find(req.user.email);
-
-    if (!user) {
-      throw new Error('User not found');
-    }
 
     return this.booksService.deleteLogical(id, user, updateBookDto);
   }

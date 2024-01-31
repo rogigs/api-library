@@ -27,8 +27,8 @@ export class BooksService {
       .getMany();
   }
 
-  findOne(id: string) {
-    return this.booksRepository
+  async findOne(id: string) {
+    const book = await this.booksRepository
       .createQueryBuilder('book')
       .where('book.id = :id', { id })
       .leftJoinAndSelect('book.image', 'image')
@@ -37,31 +37,31 @@ export class BooksService {
       .orWhere('book.deleteAt IS NULL')
       .orWhere('book.updatedByUserId IS NULL')
       .getOne();
+
+    if (!book) throw new Error('Book not found');
+
+    return book;
   }
 
   async findAllPaginated(page: number, pageSize: number) {
-    try {
-      const skip = (page - 1) * pageSize;
+    const skip = (page - 1) * pageSize;
 
-      const [items, total] = await this.booksRepository
-        .createQueryBuilder('book')
-        .where('book.active = :active', { active: 1 })
-        .leftJoinAndSelect('book.image', 'image')
-        .take(pageSize)
-        .skip(skip)
-        .getManyAndCount();
+    const [items, total] = await this.booksRepository
+      .createQueryBuilder('book')
+      .where('book.active = :active', { active: 1 })
+      .leftJoinAndSelect('book.image', 'image')
+      .take(pageSize)
+      .skip(skip)
+      .getManyAndCount();
 
-      const totalPages = Math.ceil(total / pageSize);
+    const totalPages = Math.ceil(total / pageSize);
 
-      return {
-        items,
-        total,
-        currentPage: page,
-        totalPages,
-      };
-    } catch (error) {
-      console.log('🚀 ~ BooksService ~ findAllPaginated ~ error:', error);
-    }
+    return {
+      items,
+      total,
+      currentPage: page,
+      totalPages,
+    };
   }
 
   update(id: string, user: User, updateBookDto: UpdateBookDto) {
