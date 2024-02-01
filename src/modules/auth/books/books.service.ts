@@ -23,20 +23,16 @@ export class BooksService {
     return this.booksRepository
       .createQueryBuilder('book')
       .where('book.name LIKE :query', { query: `%${query}%` })
+      .andWhere('book.active = :active', { active: 1 })
       .leftJoinAndSelect('book.image', 'image')
       .getMany();
   }
 
   async findOne(id: string) {
-    const book = await this.booksRepository
-      .createQueryBuilder('book')
-      .where('book.id = :id', { id })
-      .leftJoinAndSelect('book.image', 'image')
-      .orWhere('book.deletedByUserId IS NULL')
-      .orWhere('book.updateAt IS NULL')
-      .orWhere('book.deleteAt IS NULL')
-      .orWhere('book.updatedByUserId IS NULL')
-      .getOne();
+    const book = await this.booksRepository.findOne({
+      where: { id },
+      relations: ['category', 'language', 'image'],
+    });
 
     if (!book) throw new Error('Book not found');
 

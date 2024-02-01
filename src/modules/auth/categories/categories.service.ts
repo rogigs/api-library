@@ -22,4 +22,8 @@ export class CategoriesService {
 
     return category;
   }
+
+  findAll() {
+    return this.categoryRepository.find();
+  }
 }

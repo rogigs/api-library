@@ -44,14 +44,11 @@ export class BooksController {
 
   @Get('/find/:id')
   async find(@Param('id') id: string) {
-    const book = await this.booksService.findOne(id);
-    const category = await this.categoriesService.findOne(book.category);
-
-    return { ...book, category: category };
+    return await this.booksService.findOne(id);
   }
 
   @Get('/search')
-  serch(@Query('name') name: string) {
+  search(@Query('name') name: string) {
     return this.booksService.search(name);
   }
 

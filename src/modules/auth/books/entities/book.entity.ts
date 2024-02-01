@@ -1,3 +1,4 @@
+import { Language } from 'src/languages/entities/language.entity';
 import { Auditable } from 'src/models/auditable';
 import {
   Column,
@@ -29,8 +30,9 @@ export class Book extends Auditable {
   @Column({ length: 4 })
   year: string;
 
-  @Column()
-  language: string; // TODO: could be a c entity
+  @ManyToOne(() => Language, (language) => language.id)
+  @JoinColumn({ name: 'languageId' })
+  language: string;
 
   @Column({ length: 500 })
   description: string;

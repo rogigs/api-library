@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { ResponseInterceptor } from './app.interceptor';
 import { AppService } from './app.service';
+import { LanguagesModule } from './languages/languages.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { setJwtConstants } from './modules/auth/constants';
 import { typeOrmConfig } from './ormconfig';
@@ -18,6 +19,7 @@ import { typeOrmConfig } from './ormconfig';
     }),
     ConfigModule.forRoot({ isGlobal: true }),
     AuthModule,
+    LanguagesModule,
   ],
   controllers: [AppController],
   providers: [
